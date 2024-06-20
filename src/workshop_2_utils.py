@@ -268,6 +268,10 @@ class Docking:
             self.parse_mol_to_pbdqt(mol, input_dir, idx)
             
         logger.info(f"Docking")
+        all_poses_paths = pathlib.Path(output_dir).rglob("poses_*.sdf")
+        for file in all_poses_paths:
+            file.unlink()
+        
         for idx in tqdm(idxs):
             out_path=os.path.join(output_dir, f"poses_{idx}.sdf")
             self.dock_one(os.path.join(input_dir, f"mol_{idx}.pdbqt"), out_path)
@@ -275,7 +279,7 @@ class Docking:
         logger.info(f"Merge all the generated poses together to {output_dir}")
         with dm.without_rdkit_log():
             all_poses = []
-            all_poses_paths = pathlib.Path(output_dir).rglob("*.sdf")
+            all_poses_paths = pathlib.Path(output_dir).rglob("poses_*.sdf")
             for poses_path in all_poses_paths:
                 all_poses += dm.io.read_sdf(poses_path, sanitize=False)
             dm.io.to_sdf(all_poses, os.path.join(output_dir, "poses.sdf"))

@@ -35,3 +35,6 @@ dependencies:
   - matplotlib
   - ipywidgets = 7.7.2   # because of nglview incompat (https://github.com/nglviewer/nglview/issues/1032)
   - nglview
+
+  # Dataset
+  - polaris
