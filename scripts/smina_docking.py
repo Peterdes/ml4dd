@@ -22,10 +22,11 @@ exhaustiveness = 8
 # Paths to set
 
 # %%
-# How many molecules we want to stuff for
+# How many molecules we want to get scores for
 num_mols = None
+num_jobs = 4
 
-data_path = settings.data_path / "KIT_wt"
+data_path = settings.data_path / "KIT_V560G"
 
 # prepared_protein_pdb_file = data_path / "6vhn_prepared.pdb"
 prepared_protein_pdb_file = None
@@ -105,7 +106,7 @@ docker.dock_multiple_mols(
 # Read the poses
 
 # %%
-poses = dm.read_sdf(smina_outputs_path / "poses.sdf", as_df=True, mol_column="mols", n_jobs=-1)
+poses = dm.read_sdf(smina_outputs_path / "poses.sdf", as_df=True, mol_column="mols", n_jobs=num_jobs)
 
 (smina_outputs_path / "poses.sdf").rename(data_path / "poses.sdf")
 
