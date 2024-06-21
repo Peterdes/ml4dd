@@ -38,3 +38,6 @@ dependencies:
 
   # Dataset
   - polaris
+
+  # Interaction fingerprints
+  - oddt

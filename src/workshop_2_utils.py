@@ -171,12 +171,13 @@ class Box:
         return Box(Point.from_array(center), Point.from_array(size))
     
 class Docking:
-    def __init__(self, receptor_path, box : Box, num_poses : int = 5, exhaustiveness : int = 8):
+    def __init__(self, receptor_path, box : Box, num_poses : int = 5, exhaustiveness : int = 8, algorithm: str = 'smina'):
         self._num_poses = num_poses
         self._exhaustiveness = exhaustiveness
         self.receptor_path = receptor_path
         self.pocket_size = box.size.to_array()
         self.pocket_center = box.center.to_array()
+        self.algorithm = algorithm
         
     @property
     def num_poses(self):
@@ -189,34 +190,47 @@ class Docking:
     
     def dock_one(self, ligand_path, out_path):
         assert os.path.splitext(ligand_path)[-1].lower().strip(".") == "pdbqt", "Ligand file must be in pdbqt format"
-        output_text = subprocess.check_output(
-            [
-                "smina",
-                "--ligand",
-                str(ligand_path),
-                "--receptor",
+        if self.algorithm == "autodock":
+            output_text = subprocess.check_output([
+                "/home/ubuntu/AutoDock-GPU/bin/autodock_gpu_128wi",
+                "--ffile",
                 str(self.receptor_path),
-                "--out",
-                str(out_path),
-                "--center_x",
-                str(self.pocket_center[0]),
-                "--center_y",
-                str(self.pocket_center[1]),
-                "--center_z",
-                str(self.pocket_center[2]),
-                "--size_x",
-                str(self.pocket_size[0]),
-                "--size_y",
-                str(self.pocket_size[1]),
-                "--size_z",
-                str(self.pocket_size[2]),
-                "--num_modes",
-                str(self.num_poses),
-                "--exhaustiveness",
-                str(self.exhaustiveness)
+                "--lfile",
+                str(ligand_path),
+                "--nrun",
+                str(self.exhaustiveness),
             ],
-            universal_newlines=True  
-        )
+                universal_newlines=True  
+            )
+        elif self.algorithm == "smina":
+            output_text = subprocess.check_output(
+                [
+                    "smina",
+                    "--ligand",
+                    str(ligand_path),
+                    "--receptor",
+                    str(self.receptor_path),
+                    "--out",
+                    str(out_path),
+                    "--center_x",
+                    str(self.pocket_center[0]),
+                    "--center_y",
+                    str(self.pocket_center[1]),
+                    "--center_z",
+                    str(self.pocket_center[2]),
+                    "--size_x",
+                    str(self.pocket_size[0]),
+                    "--size_y",
+                    str(self.pocket_size[1]),
+                    "--size_z",
+                    str(self.pocket_size[2]),
+                    "--num_modes",
+                    str(self.num_poses),
+                    "--exhaustiveness",
+                    str(self.exhaustiveness)
+                ],
+                universal_newlines=True  
+            )
         return output_text
     
     def parse_output(self, output_text):
