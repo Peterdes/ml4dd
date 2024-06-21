@@ -1,0 +1,21 @@
+npts 40 42 38                        # num.grid points in xyz
+gridfld KIT.maps.fld        # grid_data_file
+spacing 0.375                        # spacing(A)
+receptor_types A C HD N NA OA SA F Cl S    # receptor atom types
+ligand_types A C HD N NA OA SA F Cl S      # ligand atom types
+receptor KIT.pdbqt          # macromolecule
+gridcenter -19.933 17.632 -27.283    # xyz-coordinates or auto
+smooth 0.5                           # store minimum energy w/in rad(A)
+map KIT.A.map               # atom-specific affinity map
+map KIT.C.map               # atom-specific affinity map
+map KIT.HD.map              # atom-specific affinity map
+map KIT.N.map               # atom-specific affinity map
+map KIT.NA.map              # atom-specific affinity map
+map KIT.OA.map              # atom-specific affinity map
+map KIT.SA.map              # atom-specific affinity map
+map KIT.F.map              # atom-specific affinity map
+map KIT.Cl.map
+map KIT.S.map
+elecmap KIT.e.map           # electrostatic potential map
+dsolvmap KIT.d.map              # desolvation potential map
+dielectric -0.1465                   # <0, AD4 distance-dep.diel;>0, constant
